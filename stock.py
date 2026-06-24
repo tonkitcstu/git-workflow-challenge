@@ -82,6 +82,7 @@ class Stock:
         items: dict[str, int] = {}
 
         # YOUR CODE HERE.
+        print("hello")
     
         return items
 

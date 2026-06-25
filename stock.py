@@ -81,8 +81,18 @@ class Stock:
     def get_summary(self):
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
-    
+        for event in self.events:
+            if isinstance(event, ItemAdded):
+                if event.name in items:
+                    items[event.name] += 1
+                else:
+                    items[event.name] = 1
+            elif isinstance(event, ItemRemoved):
+                if event.name in items:
+                    items[event.name] = max(0, items[event.name] - 1)
+                else:
+                    items[event.name] = 0
+
         return items
 
     def print_summary(self):

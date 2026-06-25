@@ -82,30 +82,26 @@ class Stock:
         items: dict[str, int] = {}
 
         for event in self.events:
-            # 1. Handle edge cases: ตรวจสอบว่า event มี property 'name' หรือไม่
+            # 1. จัดการเรื่อง Property ไม่มี
             if not hasattr(event, 'name'):
                 continue
             
             name = event.name
             
-            # ตรวจสอบ Null/None, Empty input (ค่าว่าง) และ Invalid input types (ต้องเป็น String)
+            # 2. จัดการเรื่อง Null/None, ค่าว่าง (Empty string) และประเภทข้อมูลที่ไม่ถูกต้อง
             if name is None or not isinstance(name, str) or name.strip() == "":
                 continue
 
-            # 2. Rebuild state (ประมวลผลจาก Event)
+            # 3. คำนวณจำนวนสินค้า
             if isinstance(event, ItemAdded):
-                # ถ้ามีของเข้ามา ให้บวก 1 (ถ้ายังไม่มีใน dict ให้ค่าเริ่มต้นเป็น 0 แล้วบวก 1)
                 items[name] = items.get(name, 0) + 1
-                
             elif isinstance(event, ItemRemoved):
-                # ถ้ามีการเอาของออก ให้ลบ 1
+                # ถ้ามีการเอาของออก และจำนวนต้องมากกว่า 0 (ไม่ให้ติดลบ)
                 if name in items and items[name] > 0:
                     items[name] -= 1
                     
-                    # (ทางเลือก) หากจำนวนเหลือ 0 สามารถลบ key ออกจาก summary ได้เลย
-                    if items[name] == 0:
-                        del items[name]
-
+                    
+    
         return items
 
     def print_summary(self):

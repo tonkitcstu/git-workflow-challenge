@@ -80,9 +80,14 @@ class Stock:
     # { "<item_name>": <quantity> }
     def get_summary(self):
         items: dict[str, int] = {}
-
-        # YOUR CODE HERE.
-    
+        for event in self.events:
+            if isinstance(event, ItemAdded):
+                items[event.name] = items.get(event.name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                items[event.name] = items.get(event.name, 0) - 1
+                if items[event.name] < 0:
+                    items[event.name] = 0
+        
         return items
 
     def print_summary(self):

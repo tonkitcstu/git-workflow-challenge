@@ -81,7 +81,26 @@ class Stock:
     def get_summary(self):
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
+        for event in self.events:
+            # 1. จัดการเรื่อง Property ไม่มี
+            if not hasattr(event, 'name'):
+                continue
+            
+            name = event.name
+            
+            # 2. จัดการเรื่อง Null/None, ค่าว่าง (Empty string) และประเภทข้อมูลที่ไม่ถูกต้อง
+            if name is None or not isinstance(name, str) or name.strip() == "":
+                continue
+
+            # 3. คำนวณจำนวนสินค้า
+            if isinstance(event, ItemAdded):
+                items[name] = items.get(name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                # ถ้ามีการเอาของออก และจำนวนต้องมากกว่า 0 (ไม่ให้ติดลบ)
+                if name in items and items[name] > 0:
+                    items[name] -= 1
+                    
+                    
     
         return items
 

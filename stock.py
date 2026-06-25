@@ -89,9 +89,9 @@ class Stock:
                     items[event.name] = 1
             elif isinstance(event, ItemRemoved):
                 if event.name in items:
-                    items[event.name] -= 1
-                    if items[event.name] == 0:
-                        del items[event.name]
+                    items[event.name] = max(0, items[event.name] - 1)
+                else:
+                    items[event.name] = 0
 
         return items
 

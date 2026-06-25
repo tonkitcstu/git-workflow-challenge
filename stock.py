@@ -80,12 +80,11 @@ class Stock:
     # { "<item_name>": <quantity> }
     def get_summary(self):
         items: dict[str, int] = {}
-
+          
         for event in self.events:
             if isinstance(event, ItemAdded):
                 items[event.name] = items.get(event.name, 0) + 1
             elif isinstance(event, ItemRemoved):
-                # Quantity must never go below zero
                 items[event.name] = max(0, items.get(event.name, 0) - 1)
 
         return items

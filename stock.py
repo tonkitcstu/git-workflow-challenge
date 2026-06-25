@@ -83,7 +83,7 @@ class Stock:
 
         for e in self.events:
             delta = 1 if isinstance(e, ItemAdded) else -1
-            items[e.name] = items.get(e.name, 0) + delta
+            items[e.name] = max(0, items.get(e.name, 0) + delta)
             if items[e.name] == 0:
                 del items[e.name]
 

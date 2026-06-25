@@ -78,11 +78,27 @@ class Stock:
     # TODO: Implement get_summary()
     # Returns the current stock summary as a dictionary:
     # { "<item_name>": <quantity> }
-    def get_summary(self):
+    def get_summary(self) -> dict[str, int]:
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
-    
+        # Handle edge case: Empty event log or None
+        if not self.events:
+            return items
+
+        for event in self.events:
+            # Skip invalid or null events if they somehow ended up in the log
+            if event is None:
+                continue
+                
+            name = getattr(event, 'name', None)
+            if not name:
+                continue
+
+            if isinstance(event, ItemAdded):
+                items[name] = items.get(name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                items[name] = items.get(name, 0) - 1
+
         return items
 
     def print_summary(self):

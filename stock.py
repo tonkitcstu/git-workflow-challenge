@@ -79,11 +79,20 @@ class Stock:
     # Returns the current stock summary as a dictionary:
     # { "<item_name>": <quantity> }
     def get_summary(self):
-        items: dict[str, int] = {}
+        summary: dict[str, int] = {}
 
-        # YOUR CODE HERE.
-    
-        return items
+        for event in self.events:
+            
+            if isinstance(event, ItemAdded):
+                summary[event.name] = summary.get(event.name, 0) + 1
+
+            elif isinstance(event, ItemRemoved):
+                summary[event.name] = summary.get(event.name, 0) - 1
+                
+                if summary.get(event.name, 0) <= 0:
+                    summary.pop(event.name, None)
+
+        return summary
 
     def print_summary(self):
         summary = self.get_summary()

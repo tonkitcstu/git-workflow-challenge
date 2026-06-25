@@ -1,4 +1,6 @@
 import uuid
+import pandas as pd
+
 
 # =========================================================
 # DOMAIN MODEL
@@ -79,10 +81,23 @@ class Stock:
     # Returns the current stock summary as a dictionary:
     # { "<item_name>": <quantity> }
     def get_summary(self):
+
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
-    
+        for event in self.events:
+
+            if event is None or not hasattr(event, 'name'):
+                continue
+            
+            if not isinstance(event.name, str):
+                continue
+
+            if isinstance(event, ItemAdded):
+                items[event.name] = items.get(event.name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                if items.get(event.name, 0) > 0:
+                    items[event.name] -= 1
+
         return items
 
     def print_summary(self):

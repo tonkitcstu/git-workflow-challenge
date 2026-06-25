@@ -10,6 +10,7 @@ import uuid
 # - Quantity is derived from event history (not stored directly)
 # =========================================================
 
+
 class Item:
     def __init__(self, name: str):
         # UUID included for demonstration only (not used in events)
@@ -27,6 +28,7 @@ class Item:
 # These events represent changes in stock quantity.
 # They are NOT tracking individual item identity.
 # =========================================================
+
 
 class StockEvent:
     pass
@@ -54,6 +56,7 @@ class ItemRemoved(StockEvent):
 # - Current state = {item_name -> quantity}
 # =========================================================
 
+
 class Stock:
     def __init__(self):
         # Event log (single source of truth)
@@ -80,9 +83,15 @@ class Stock:
     # { "<item_name>": <quantity> }
     def get_summary(self):
         items: dict[str, int] = {}
+        for event in self.events:
+            if isinstance(event, ItemAdded):
+                items[event.name] = items.get(event.name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                items[event.name] = items.get(event.name, 0) - 1
 
-        # YOUR CODE HERE.
-    
+                if items[event.name] <= 0:
+                    del items[event.name]
+
         return items
 
     def print_summary(self):

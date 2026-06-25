@@ -1,5 +1,4 @@
 import uuid
-
 # =========================================================
 # DOMAIN MODEL
 # =========================================================
@@ -75,13 +74,22 @@ class Stock:
     # READ MODEL (REBUILD STATE)
     # -------------------
 
-    # TODO: Implement get_summary()
     # Returns the current stock summary as a dictionary:
     # { "<item_name>": <quantity> }
     def get_summary(self):
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
+        # วนลูปเพื่อไล่ดูเหตุการณ์ (Events) ทั้งหมดที่เคยเกิดขึ้น
+        for event in self.events:
+            if isinstance(event, ItemAdded):
+                # เพิ่มจำนวนสินค้าตามชื่อชนิดนั้น ๆ
+                items[event.name] = items.get(event.name, 0) + 1
+            elif isinstance(event, ItemRemoved):
+                # ลดจำนวนสินค้าตามชื่อชนิดนั้น ๆ
+                items[event.name] = items.get(event.name, 0) - 1
+                # ป้องกันไม่ให้จำนวนสินค้าติดลบ ตามเงื่อนไขของ Unit Test
+                if items[event.name] < 0:
+                    items[event.name] = 0
     
         return items
 

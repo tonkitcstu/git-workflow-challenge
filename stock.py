@@ -86,7 +86,7 @@ def get_summary(self):
             items[event.name] = items.get(event.name, 0) + 1
         elif isinstance(event, ItemRemoved):
             items[event.name] = items.get(event.name, 0) - 1
-
+#add print item
     return items                          
 
 def print_summary(self):                  

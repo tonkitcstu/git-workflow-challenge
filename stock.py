@@ -81,7 +81,14 @@ class Stock:
     def get_summary(self):
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
+        #Null
+        if not self.events : return {}
+
+        #No events
+        if not self.events.count(): return {}
+
+        for e in self.events:
+            items[e.name] = items.get(e.name, 0) + 1
     
         return items
 

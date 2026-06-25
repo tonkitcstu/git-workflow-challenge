@@ -10,7 +10,9 @@ import uuid
 # - Quantity is derived from event history (not stored directly)
 # =========================================================
 
+
 class Item:
+
     def __init__(self, name: str):
         # UUID included for demonstration only (not used in events)
         self.id = uuid.uuid4()
@@ -28,17 +30,20 @@ class Item:
 # They are NOT tracking individual item identity.
 # =========================================================
 
+
 class StockEvent:
     pass
 
 
 class ItemAdded(StockEvent):
+
     def __init__(self, name: str):
         # STOCK EVENT: one unit of this item type was added
         self.name = name
 
 
 class ItemRemoved(StockEvent):
+
     def __init__(self, name: str):
         # STOCK EVENT: one unit of this item type was removed
         self.name = name
@@ -54,7 +59,9 @@ class ItemRemoved(StockEvent):
 # - Current state = {item_name -> quantity}
 # =========================================================
 
+
 class Stock:
+
     def __init__(self):
         # Event log (single source of truth)
         self.events: list[StockEvent] = []
@@ -75,14 +82,27 @@ class Stock:
     # READ MODEL (REBUILD STATE)
     # -------------------
 
-    # TODO: Implement get_summary()
-    # Returns the current stock summary as a dictionary:
-    # { "<item_name>": <quantity> }
     def get_summary(self):
         items: dict[str, int] = {}
 
-        # YOUR CODE HERE.
-    
+        # วนลูปเพื่อไล่ดูประวัติเหตุการณ์ทั้งหมด (Event Replay)
+        for event in self.events:
+            if isinstance(event, ItemAdded):
+                # ถ้ายังไม่มีชื่อสินค้านี้ในระบบ ให้เริ่มที่ 0 ก่อน
+                if event.name not in items:
+                    items[event.name] = 0
+                items[event.name] += 1
+
+            elif isinstance(event, ItemRemoved):
+                # ถ้ามีเหตุการณ์ลบสินค้า
+                if event.name not in items:
+                    items[event.name] = 0
+                items[event.name] -= 1
+
+                # ป้องกันไม่ให้จำนวนสินค้าติดลบต่ำกว่า 0
+                if items[event.name] < 0:
+                    items[event.name] = 0
+
         return items
 
     def print_summary(self):

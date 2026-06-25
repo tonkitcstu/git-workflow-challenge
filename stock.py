@@ -81,15 +81,12 @@ class Stock:
     def get_summary(self):
         items: dict[str, int] = {}
 
-        #Null
-        if not self.events : return {}
-
-        #No events
-        if not self.events.count(): return {}
-
         for e in self.events:
-            items[e.name] = items.get(e.name, 0) + 1
-    
+            delta = 1 if isinstance(e, ItemAdded) else -1
+            items[e.name] = items.get(e.name, 0) + delta
+            if items[e.name] == 0:
+                del items[e.name]
+
         return items
 
     def print_summary(self):
